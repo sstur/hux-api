@@ -1,0 +1,52 @@
+type User {
+  id: ID! @id
+  name: String!
+  email: String! @unique
+  password: String!
+  photo: String!
+  posts: [Post!]! @relation(name: "UserPost")
+  comments: [Comment!]!
+  likes: [Post!]! @relation(name: "UserLikedPost")
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+}
+
+type Session {
+  id: ID! @id
+  user: User! @relation(link: INLINE)
+  createdAt: DateTime! @createdAt
+}
+
+type Post {
+  id: ID! @id
+  text: String!
+  photo: String!
+  owner: User! @relation(link: INLINE, name: "UserPost")
+  likes: [User!]! @relation(link: INLINE, name: "UserLikedPost")
+  comments: [Comment!]! @relation(link: INLINE)
+  location: Location
+  data: Json
+  status: Status!
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+}
+
+type Comment {
+  id: ID! @id
+  text: String!
+  post: Post!
+  owner: User! @relation(link: INLINE)
+  status: Status!
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+}
+
+type Location @embedded {
+  latitude: Float!
+  longitude: Float!
+}
+
+enum Status {
+  ACTIVE
+  DELETED
+}
